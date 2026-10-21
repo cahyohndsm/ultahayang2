@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun An'nisa Rahma Ramadhani! ❤️</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Sacramento&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --card-bg: #ffffff;
+            --primary-pink: #ff8fa3;
+            --dark-pink: #ff4d6d;
+            --accent-yellow: #fff0f5;
+            --text-color: #594a4e;
+            --shadow-color: rgba(255, 143, 163, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(#ffb3c1 2px, transparent 2px),
+                radial-gradient(#ffb3c1 2px, var(--bg-color) 2px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Background Decorations */
+        .bg-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .bg-decor.d1 { top: 5%; left: 5%; font-size: 2rem; color: #ff758f; animation-delay: 0s; }
+        .bg-decor.d2 { top: 15%; right: 8%; font-size: 2.5rem; color: #ffb3c1; animation-delay: 1s; }
+        .bg-decor.d3 { bottom: 10%; left: 8%; font-size: 2.2rem; color: #ff8fa3; animation-delay: 2s; }
+        .bg-decor.d4 { bottom: 12%; right: 6%; font-size: 1.8rem; color: #c9184a; animation-delay: 1.5s; }
+
+        /* Container Main */
+        .app-container {
+            width: 100%;
+            max-width: 650px;
+            padding: 20px;
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* --- GIFT SCREEN --- */
+        #gift-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 20;
+        }
+
+        .gift-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.2rem;
+            color: var(--dark-pink);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0px #fff;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-12px); }
+            60% { transform: translateY(-6px); }
+        }
+
+        .gift-box {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            background: linear-gradient(135deg, #ff8fa3, #ff4d6d);
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 15px 30px var(--shadow-color);
+            transition: transform 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid #fff;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.08) rotate(3deg);
+        }
+
+        /* Ribbon Base */
+        .gift-ribbon-v {
+            position: absolute;
+            width: 34px;
+            height: 100%;
+            background: #fff;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+            pointer-events: none;
+        }
+        .gift-ribbon-h {
+            position: absolute;
+            width: 100%;
+            height: 34px;
+            background: #fff;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+            pointer-events: none;
+        }
+
+        /* Bow Knot */
+        .gift-bow {
+            position: absolute;
+            top: -30px;
+            font-size: 3.5rem;
+            color: #fff;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .gift-instruction {
+            margin-top: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #725159;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 10px 22px;
+            border-radius: 30px;
+            border: 2px dashed var(--primary-pink);
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* --- MAIN CONTENT SCREEN --- */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        #main-content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nailog Card Frame */
+        .nailog-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 30px 25px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            border: 4px solid #fff;
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .nailog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #ffe0e6;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nailog-badge {
+            background: #ffe0e6;
+            color: var(--dark-pink);
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: var(--dark-pink);
+            margin: 10px 0 20px 0;
+            line-height: 1.3;
+        }
+
+        /* Message Letter */
+        .letter-box {
+            background: #fff8f9;
+            border-radius: 18px;
+            padding: 22px;
+            border: 2px solid #ffd6ff;
+            text-align: left;
+            position: relative;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #554247;
+            box-shadow: inset 0 2px 6px rgba(255,182,193,0.15);
+        }
+
+        .typewriter-text {
+            min-height: 180px;
+            font-weight: 600;
+            white-space: pre-line;
+        }
+
+        /* Photo Gallery Polaroid Grid */
+        .gallery-title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--dark-pink);
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .polaroid {
+            background: #ffffff;
+            padding: 10px 10px 15px 10px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f0e0e3;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .polaroid:nth-child(odd) { transform: rotate(-2.5deg); }
+        .polaroid:nth-child(even) { transform: rotate(2.5deg); }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 12px 25px var(--shadow-color);
+            z-index: 5;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+            background-color: #ffeef2;
+        }
+
+        .polaroid-caption {
+            font-family: 'Sacramento', cursive;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--dark-pink);
+            margin-top: 8px;
+        }
+
+        /* Interactive Surprise Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-nailog {
+            background: #fff;
+            border: 2px solid var(--primary-pink);
+            color: var(--dark-pink);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(255, 143, 163, 0.15);
+        }
+
+        .btn-nailog:hover {
+            background: var(--dark-pink);
+            color: #fff;
+            border-color: var(--dark-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px var(--shadow-color);
+        }
+
+        /* Music Floating Control */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffffff;
+            color: var(--dark-pink);
+            border: 3px solid var(--primary-pink);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .music-btn.playing {
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal / Lightbox Photo Zoom */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 16px;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive adjustment */
+        @media (max-width: 480px) {
+            .gift-title { font-size: 1.8rem; }
+            .main-title { font-size: 1.4rem; }
+            .photo-grid { grid-template-columns: 1fr 1fr; }
+            .polaroid img { height: 130px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Cute Elements -->
+    <i class="fa-solid fa-heart bg-decor d1"></i>
+    <i class="fa-solid fa-cloud bg-decor d2"></i>
+    <i class="fa-solid fa-sparkles bg-decor d3"></i>
+    <i class="fa-solid fa-star bg-decor d4"></i>
+
+    <!-- App Container -->
+    <div class="app-container">
+
+        <!-- STEP 1: KADO BESAR (LANDING SCREEN) -->
+        <div id="gift-screen">
+            <h1 class="gift-title">Kado Spesial Untuk An'nisa 🎁✨</h1>
+            <div class="gift-box" id="giftBoxBtn" onclick="openGift()">
+                <div class="gift-ribbon-v"></div>
+                <div class="gift-ribbon-h"></div>
+                <i class="fa-solid fa-ribbon gift-bow"></i>
+            </div>
+            <div class="gift-instruction" onclick="openGift()">
+                <i class="fa-solid fa-hand-pointer"></i> Klik Kado Ini Sayang! ✨
+            </div>
+        </div>
+
+        <!-- STEP 2: ISI UCAPAN & FOTO (MAIN CONTENT) -->
+        <div id="main-content">
+            <div class="nailog-card">
+                <div class="nailog-header">
+                    <span class="nailog-badge">HAPPY 21st BIRTHDAY ✨</span>
+                    <span style="font-weight: 700; color: var(--primary-pink); font-size: 0.9rem;">
+                        <i class="fa-solid fa-calendar-heart"></i> Hari Spesialmu
+                    </span>
+                </div>
+
+                <h1 class="main-title">Selamat Ulang Tahun Ke-21, An'nisa Rahma Ramadhani! ❤️🎂</h1>
+
+                <!-- Letter / Message Box -->
+                <div class="letter-box">
+                    <p id="typewriter" class="typewriter-text"></p>
+                </div>
+
+                <!-- Photo Gallery Section -->
+                <div class="gallery-title">
+                    <i class="fa-solid fa-camera-retro"></i> Momen Indah Bersamamu <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div class="photo-grid">
+                    <!-- Foto 1 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto1.jepg')">
+                        <img src="images/foto1.jpeg" alt="An'nisa Cantik 1" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Kebahagiaanku 💕</div>
+                    </div>
+                    <!-- Foto 2 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto2.jpeg')">
+                        <img src="images/foto2.jpeg" alt="An'nisa Cantik 2" onerror="this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Bidadariku ✨</div>
+                    </div>
+                    <!-- Foto 3 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto3.jpeg')">
+                        <img src="images/foto3.jpeg" alt="An'nisa Cantik 3" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Wanita Terhebat 💖</div>
+                    </div>
+                    <!-- Foto 4 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto4.jpeg')">
+                        <img src="images/foto4.jpeg" alt="An'nisa Cantik 4" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Cintaku Selamanya ❤️</div>
+                    </div>
+                    <!-- Foto 5 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto5.jpeg')">
+                        <img src="images/foto5.jpeg" alt="An'nisa Cantik 5" onerror="this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Senyum Indahmu ✨</div>
+                    </div>
+                    <!-- Foto 6 -->
+                    <div class="polaroid" onclick="zoomPhoto('images/foto6.jpeg')">
+                        <img src="images/foto6.jpeg" alt="An'nisa Cantik 6" onerror="this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&auto=format&fit=crop&q=60'">
+                        <div class="polaroid-caption">Duniaku 💕</div>
+                    </div>
+                </div>
+
+                <!-- Interactive Action Buttons -->
+                <div class="button-group">
+                    <button class="btn-nailog" onclick="triggerHug()">
+                        <i class="fa-solid fa-face-smile-wink"></i> Peluk Online 🤗
+                    </button>
+                    <button class="btn-nailog" onclick="triggerKiss()">
+                        <i class="fa-solid fa-kiss-wink-heart"></i> Kirim Ciuman 😘
+                    </button>
+                    <button class="btn-nailog" onclick="triggerSecret()">
+                        <i class="fa-solid fa-key"></i> Pesan Rahasia 💌
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating Audio Control Button -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+        <i class="fa-solid fa-music"></i>
+    </button>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Lightbox Modal Zoom -->
+    <div id="photoModal" class="modal" onclick="closeModal()">
+        <img id="modalImg" class="modal-content" src="" alt="Zoom Foto">
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Teks Ucapan Romantis Khusus An'nisa Rahma Ramadhani
+        const fullMessage = "Selamat ulang tahun yang ke-21 ya sayangku, cintaku, duniaku... An'nisa Rahma Ramadhani 🎉✨\n\nSelamat bertambah usia untuk wanita paling cantik dan paling bermakna dalam hidup aku. Terima kasih ya sayang sudah hadir ke dunia ini dan memilih untuk berjalan bersamaku. Kehadiran kamu itu seperti keajaiban—selalu membawa kehangatan, ketenangan, dan kebahagiaan yang tidak pernah aku dapatkan dari tempat lain.\n\nDi usiamu yang ke-21 ini, doa terbaikku selalu menyertaimu. Semoga kamu selalu sehat, dilimpahkan kebahagiaan yang tak pernah habis, dipermudah segala impian dan cita-citamu, serta selalu dilindungi dalam setiap langkahmu.\n\nIngat ya sayang, kapan pun kamu merasa lelah, aku akan selalu ada di sini untuk menjadi tempat kamu pulang. Tetap jadi An'nisa yang hangat, baik hati, dan selalu mengagumkan ya. Aku sangat bangga bisa mencintaimu.\n\nI love you so much today, tomorrow, and forever, An'nisa Rahma Ramadhani! ❤️✨";
+
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        // Fungsi Membuka Kado
+        function openGift() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 150,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            document.getElementById('gift-screen').style.display = 'none';
+            const mainContent = document.getElementById('main-content');
+            mainContent.classList.add('show');
+
+            music.play().then(() => {
+                musicBtn.classList.add('playing');
+            }).catch(e => console.log("Audio autoplay diblokir browser: " + e));
+
+            typeWriter();
+        }
+
+        // Typewriter Effect
+        let i = 0;
+        function typeWriter() {
+            if (i < fullMessage.length) {
+                const char = fullMessage.charAt(i);
+                document.getElementById("typewriter").innerHTML += char;
+                i++;
+                setTimeout(typeWriter, 30);
+            }
+        }
+
+        // Music Control
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.classList.add('playing');
+            } else {
+                music.pause();
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // Interactive Buttons
+        function triggerHug() {
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            }
+            alert("🤗 Pelukan erat dan paling hangat dikirimkan khusus untuk An'nisa Rahma Ramadhani tersayang!");
+        }
+
+        function triggerKiss() {
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 80, spread: 90, origin: { y: 0.7 } });
+            }
+            alert("😘 Mmmmuahhh! Ciuman sayang dan sejuta kasih sayang untuk duniaku yang paling manis!");
+        }
+
+        function triggerSecret() {
+            alert("💌 Pesan Rahasia: Kamu adalah alasan aku selalu bersyukur setiap hari. Selamat bertambah dewasa ya sayangku An'nisa! ❤️");
+        }
+
+        // Lightbox Modal
+        function zoomPhoto(src) {
+            const modal = document.getElementById('photoModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = "flex";
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            document.getElementById('photoModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>
