@@ -487,8 +487,8 @@
         <i class="fa-solid fa-music"></i>
     </button>
 
-    <!-- Audio Element -->
-    <audio id="bgMusic" loop>
+    <!-- Audio Element (Ditambahkan Atribut Mobile playsinline & preload) -->
+    <audio id="bgMusic" loop preload="auto" playsinline webkit-playsinline>
         <source src="lagu.mp3" type="audio/mpeg">
     </audio>
 
@@ -505,6 +505,13 @@
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
 
+        // Preload Audio khusus browser HP
+        window.addEventListener('DOMContentLoaded', () => {
+            if (music) {
+                music.load();
+            }
+        });
+
         // Fungsi Membuka Kado
         function openGift() {
             if (typeof confetti === 'function') {
@@ -519,9 +526,19 @@
             const mainContent = document.getElementById('main-content');
             mainContent.classList.add('show');
 
-            music.play().then(() => {
-                musicBtn.classList.add('playing');
-            }).catch(e => console.log("Audio autoplay diblokir browser: " + e));
+            // Eksekusi pemutaran audio khusus gesture klik HP
+            if (music) {
+                music.currentTime = 0;
+                var playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicBtn.classList.add('playing');
+                    }).catch(error => {
+                        console.log("Autoplay diblokir:", error);
+                        // Jika terblokir, pengguna bisa mengklik ikon musik mengambang di kanan bawah
+                    });
+                }
+            }
 
             typeWriter();
         }
@@ -540,8 +557,9 @@
         // Music Control
         function toggleMusic() {
             if (music.paused) {
-                music.play();
-                musicBtn.classList.add('playing');
+                music.play().then(() => {
+                    musicBtn.classList.add('playing');
+                }).catch(e => console.log(e));
             } else {
                 music.pause();
                 musicBtn.classList.remove('playing');
